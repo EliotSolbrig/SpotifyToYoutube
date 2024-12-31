@@ -19,7 +19,7 @@ func (router *Router) HomePage(w http.ResponseWriter, r *http.Request){
         spotifyAuthStatus = true
     }
 
-    templates := append([]string{"templates/pages/homepage.html",}, basePasefiles...)
+    templates := append([]string{"templates/pages/homepage.html","templates/components/songinfo.html",}, basePasefiles...)
 
     tmpl := template.Must(template.ParseFiles(templates...))
 
