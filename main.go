@@ -3,43 +3,49 @@ package main
 import (
     "fmt"
     "net/http"
-    "html/template"
+    "os"
 
 	"github.com/gorilla/mux"
+     "github.com/joho/godotenv"
 
-    "main/spotify"
-    "main/router"
+    "spot2yt/router"
 )
+
+var basePasefiles []string = []string{
+    "templates/base.html",
+    "templates/components/header.html",
+    "templates/components/footer.html",
+}
 
 const staticDir string = "/static/"
 
 func main(){
     fmt.Println("Spotify to youtube converter")
 
+    godotenv.Load()
+
     r := mux.NewRouter()
     router := router.NewRouter()
 
-    spotifyClient := spotify.NewSpotifyClient()
+    fmt.Println("router: ", router)
+
 
     staticHandler := http.StripPrefix(staticDir, http.FileServer(http.Dir("static/")))
     r.PathPrefix(staticDir).Handler(staticHandler)
 
-    if spotifyClient == nil {
-        panic(fmt.Errorf("Spotify client is null"))
+    if router.SpotifyClient.Client == nil {
+        tempError := fmt.Errorf("Spotify client is null")
+        fmt.Println("tempError: ", tempError)
     }
 
-    r.HandleFunc("/"
+    r.HandleFunc("/", router.HomePage)
+    r.HandleFunc("/auth/spotify", router.AuthSpotify)
+    r.HandleFunc("/auth/spotify/get", router.GetSpotifyClient)
+
+    port := os.Getenv("PORT")
+
+    fmt.Println("Listening on port ", port)
+    panic(http.ListenAndServe(":" + port, r))
 
 }
 
-func HomePage(w http.ResponseWriter, r *http.Request){
-    templates := append([]string{"templates/pages/homepage.html"}, basePasefiles...)
-
-    tmpl := template.Must(template.ParseFiles(templates...))
-
-    err := tmpl.ExecuteTemplate(w, "base", map[string]any{
-        "Data": map[string]any{
-            "Test": "hi",
-        },
-    })
-}

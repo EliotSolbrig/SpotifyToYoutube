@@ -1,7 +1,29 @@
 {{ define "body" }}
-    <div class="">
-        <div class="center row">
+    <div style="display:grid" class="">
+        <div class="text-white center row">
             <h2>Spotify To Youtube</h2>
+        </div>
+        <div
+            id="spotify-auth-status"
+            name="spotify-auth-status"
+            class="text-white center row"
+            >
+            {{ if .Data.SpotifyAuthStatus }}
+            <label
+                style="color:green;"
+                >
+                Spotify Authenticated
+            </label>
+            {{ else }}
+            <a href="/auth/spotify/get">
+            <label
+                title="Click to authenticate"
+                style="color:red;"
+                >
+                Spotify Not Authenticated
+            </label>
+            </a>
+            {{ end }}
         </div>
     </div>
 {{ end }}
