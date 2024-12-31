@@ -1,7 +1,7 @@
 package router
 
 import (
-    // "fmt"
+    "fmt"
 
     "spot2yt/spotify"
 )
@@ -33,4 +33,19 @@ func NewRouter() *Router {
             Client: nil,
         },
     }
+}
+
+func (router *Router) GetSpotifyAuthStatus() bool {
+    var spotifyAuthStatus bool
+    // var youtubeAuthStatus bool
+    spotifyClient := router.SpotifyClient.Client
+    fmt.Println("spotifyClient: ", spotifyClient)
+
+    if spotifyClient == nil {
+        spotifyAuthStatus = false
+    } else {
+        spotifyAuthStatus = true
+    }
+
+    return spotifyAuthStatus
 }

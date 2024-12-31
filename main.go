@@ -41,6 +41,7 @@ func main(){
     r.HandleFunc("/", router.HomePage)
     r.HandleFunc("/auth/spotify", router.AuthSpotify)
     r.HandleFunc("/auth/spotify/get", router.GetSpotifyClient)
+    r.HandleFunc("/convert", router.ConvertSong)
 
     port := os.Getenv("PORT")
 

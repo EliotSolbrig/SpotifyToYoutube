@@ -25,25 +25,6 @@
             </a>
             {{ end }}
         </div>
-        <div class="text-white center row">
-        <div class="center row">
-            Enter a song link:
-        </div>
-        <div class="center row">
-            <input
-                class="text-black"
-                type="text"
-                placeholder="https://open.spotify.com/track/5ugDZ2gBEjvRIqewKvLwR1?si=ac41a6ff6c74441a"
-                >
-            </input>
-        </div>
-        <div class="center row">
-            <button
-                >
-                Spotify -> Youtube
-            </button>
-        </div>
-        </div>
         {{ if .Data.SongInfo }}
         <div
             id="song-info-div"
@@ -52,5 +33,36 @@
             {{ template "songinfo" .Data.SongInfo }}
         </div>
         {{ end }}
+        <div class="text-white center row">
+        <div class="center row">
+            Enter a song link:
+        </div>
+        <div class="center row">
+            <input
+                id="song-link-input"
+                name="song-link-input"
+                class="text-black"
+                type="text"
+                placeholder="https://open.spotify.com/track/5ugDZ2gBEjvRIqewKvLwR1?si=ac41a6ff6c74441a"
+                >
+            </input>
+        </div>
+        <div
+            class="center row"
+                hx-get="/convert"
+                hx-swap="innerHTML"
+                hx-target="#song-info-div"
+                hx-include="#song-link-input"
+            >
+            <button
+                id="convert-track-button"
+                name="convert-track-button"
+                class=""
+                type="button"
+                >
+                Spotify -> Youtube
+            </button>
+        </div>
+        </div>
     </div>
 {{ end }}

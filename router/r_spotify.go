@@ -31,7 +31,9 @@ func (router *Router) AuthSpotify(w http.ResponseWriter, r *http.Request){
 
     // http.Redirect(w, r, "/", http.StatusSeeOther)
 
-    // w.Write([]byte("success"))
+    w.Write([]byte("success"))
+
+    http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 
@@ -83,4 +85,24 @@ func (router *Router) GetSpotifyClient(w http.ResponseWriter, r *http.Request){
 
 
     w.Write([]byte(response))
+}
+
+
+func (router *Router) GetSpotifySongInfo(w http.ResponseWriter, r *http.Request){
+    fmt.Println(r.Method, " request on /getspotifysonginfo")
+
+    spotifyAuthStatus := router.GetSpotifyAuthStatus()
+    if spotifyAuthStatus == false {
+        panic(fmt.Errorf("Spotify not authenticated"))
+    }
+
+    r.ParseForm()
+    songURL := r.FormValue("song-info-div")
+    fmt.Println("songURL: ", songURL)
+
+    songInfo,err := spotify.GetSongInfoFromURL(songURL)
+    if err != nil {
+        panic(fmt.Errorf("Error getting song info from url: %s", err))
+    }
+    fmt.Println("songInfo: ", songInfo)
 }

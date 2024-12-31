@@ -9,6 +9,7 @@ import (
     "encoding/json"
 
     sp "github.com/zmb3/spotify"
+
 )
 
 type SpotifyClient struct {
@@ -64,4 +65,18 @@ func NewSpotifyClient() (*sp.Client, error) {
 
    return authResponse.Client, nil 
 
+}
+
+type SongInfo struct {
+
+}
+
+func GetSongInfoFromURL(songURI string) (SongInfo, error){
+    // spotifyAuthStatus := router.NewRouter().GetSpotifyAuthStatus() 
+    withoutParams := strings.Split(songURI,"?")[0]
+    fmt.Println("withoutParams: ", withoutParams)
+
+    songInfo := SongInfo{}
+
+    return songInfo, nil
 }
