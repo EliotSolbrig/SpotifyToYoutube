@@ -2,8 +2,13 @@ package router
 
 import (
     "fmt"
+    "context"
+    "os"
 
     "spot2yt/spotify"
+
+    "google.golang.org/api/option"
+    youtube "google.golang.org/api/youtube/v3"
 )
 
 var basePasefiles []string = []string{
@@ -15,6 +20,7 @@ var basePasefiles []string = []string{
 type Router struct {
     SpotifyClient *spotify.SpotifyClient
     // YoutubeClient 
+    YoutubeService *youtube.Service
 }
 
 // func NewRouter(service service.IService) *Router {
@@ -28,10 +34,18 @@ func NewRouter() *Router {
     // }
     // spClient := spotify.SpotifyClient{}
 
+    ytService,err := youtube.NewService(context.Background(), option.WithAPIKey(os.Getenv("YOUTUBE_API_KEY")))
+
+    if err != nil {
+        panic(fmt.Errorf("Error getting new youtube service: %s", err))
+    }
+    fmt.Println("ytService: ", ytService)
+
     return &Router{
         SpotifyClient: &spotify.SpotifyClient{
             Client: nil,
         },
+        YoutubeService: ytService,
     }
 }
 

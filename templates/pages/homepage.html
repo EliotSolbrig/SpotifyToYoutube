@@ -25,14 +25,14 @@
             </a>
             {{ end }}
         </div>
-        {{ if .Data.SongInfo }}
         <div
             id="song-info-div"
             name="song-info-div"
             >
+        {{ if .Data.SongInfo }}
             {{ template "songinfo" .Data.SongInfo }}
-        </div>
         {{ end }}
+        </div>
         <div class="text-white center row">
         <div class="center row">
             Enter a song link:
