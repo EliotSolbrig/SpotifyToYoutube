@@ -4,6 +4,8 @@ import (
 	// "context"
 	"fmt"
 	"net/http"
+    // "encoding/json"
+    "html/template"
 
 	"spot2yt/spotify"
 	// "spot2yt/yt"
@@ -21,6 +23,7 @@ func (router *Router) ConvertSong(w http.ResponseWriter, r *http.Request){
     songInfo,err := spotify.GetSongInfoFromURL(songURL, router.SpotifyClient)
     if err != nil {
         tempError := fmt.Errorf("Error getting song info from url %s: %s.", songURL, err)
+
         fmt.Println("tempError: ", tempError)
     }
     fmt.Println("songInfo: ", songInfo)
@@ -41,24 +44,33 @@ func (router *Router) ConvertSong(w http.ResponseWriter, r *http.Request){
     for _,item := range xs.Items {
         fmt.Println("item: ", item.Id.VideoId)
         fmt.Println("snippet: ", item.Snippet)
+        thumbnails := item.Snippet.Thumbnails
+        fmt.Println("thumbnails: ", thumbnails)
     } 
 
-    // searchListCall := youtube.SearchListCall{}
-    //
-    // searchListCall.Context(r.Context())
-    // // searchListCall1 := searchListCall.Context(context.Background())
-    // fmt.Println("searchListCall: ", &searchListCall)
-    //
-    // searchListCall1 := searchListCall.Q("lmao")
-    // fmt.Println("searchListCall1: ", searchListCall1)
-    //
-    //
-    // searchListResponse,err := searchListCall1.Do()
-    //
+    firstResult := xs.Items[0]
+
+    convertedInfo := map[string]any{
+        "ID": firstResult.Id.VideoId,
+        "Title": firstResult.Snippet.Title,
+        "Thumbnail": firstResult.Snippet.Thumbnails.High.Url,
+        "Url": "https://www.youtube.com/watch?v=" + firstResult.Id.VideoId,
+        "EmbedUrl": "https://www.youtube.com/embed/" + firstResult.Id.VideoId,
+    }
+    fmt.Println("convertedInfo: ", convertedInfo)
+
+    templates := []string{"templates/components/songinfo.html",}
+    tmpl := template.Must(template.ParseFiles(templates...))
+    err = tmpl.ExecuteTemplate(w, "songinfo", convertedInfo)
+
+    if err != nil {
+        panic(fmt.Errorf("Error executing songinfo template: %s", err))
+    }
+
+    // response,err := json.Marshal(convertedInfo)
     // if err != nil {
-    //     panic(fmt.Errorf("Error running search list call: %s", err))
+    //     panic(fmt.Errorf("Error marshaling response: %s", err))
     // }
     //
-    // fmt.Println("searchListResponse: ", searchListResponse)
-
+    // w.Write(response)
 }
