@@ -1,6 +1,6 @@
 module spot2yt
 
-go 1.23.4
+go 1.22
 
 require (
 	cloud.google.com/go/auth v0.13.0 // indirect
